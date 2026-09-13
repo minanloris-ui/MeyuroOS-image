@@ -1,4 +1,14 @@
-# image-template
+# MeyuroOS
+
+MeyuroOS is a custom immutable KDE operating-system image published as
+`ghcr.io/minanloris-ui/meyuroos:latest`.
+
+The image includes a native **MeyuroOS Updates** page in KDE System Settings.
+It uses `bootc` to check for, download, and prepare the newest signed image, and
+supports rebooting into it or returning to the previous deployment. See
+[`apps/meyuro-update`](apps/meyuro-update) for its source.
+
+## Upstream image-template guide
 
 This repository is meant to be a template for building your own custom [bootc](https://github.com/bootc-dev/bootc) image. This template is the recommended way to make customizations to any image published by the Universal Blue Project.
 

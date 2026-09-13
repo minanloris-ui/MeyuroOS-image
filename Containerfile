@@ -1,10 +1,34 @@
+ARG BASE_IMAGE="ghcr.io/ublue-os/bazzite:stable@sha256:9556db65991d57a03a7dc18e4ba28a686d8bcdcd6b61235aa69c8267bb22ff76"
+
 # Allow build scripts to be referenced without being copied into the final image
 FROM scratch AS ctx
 COPY build_files /
 COPY system_files /system_files
 
+# Build the native KDE System Settings module in an isolated stage so compiler
+# packages do not become part of the final operating-system image.
+FROM ${BASE_IMAGE} AS updater-builder
+COPY apps/meyuro-update /tmp/meyuro-update
+RUN dnf5 install -y \
+        cmake \
+        extra-cmake-modules \
+        gcc-c++ \
+        kf6-kcmutils-devel \
+        kf6-kcoreaddons-devel \
+        kf6-ki18n-devel \
+        ninja-build \
+        qt6-qtbase-devel \
+        qt6-qtdeclarative-devel && \
+    cmake -S /tmp/meyuro-update -B /tmp/meyuro-update-build \
+        -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr && \
+    cmake --build /tmp/meyuro-update-build && \
+    DESTDIR=/tmp/meyuro-update-root cmake --install /tmp/meyuro-update-build && \
+    find /tmp/meyuro-update-root -name 'kcm_meyuro_update.so' -print -quit | grep -q .
+
 # Base Image
-FROM ghcr.io/ublue-os/bazzite:stable@sha256:9556db65991d57a03a7dc18e4ba28a686d8bcdcd6b61235aa69c8267bb22ff76
+FROM ${BASE_IMAGE}
 ## Other possible base images include:
 # FROM ghcr.io/ublue-os/bazzite:testing
 # FROM ghcr.io/ublue-os/aurora:stable
@@ -29,6 +53,8 @@ FROM ghcr.io/ublue-os/bazzite:stable@sha256:9556db65991d57a03a7dc18e4ba28a686d8b
 ### MODIFICATIONS
 ## make modifications desired in your image and install packages by modifying the build.sh script
 ## the following RUN directive does all the things required to run "build.sh" as recommended.
+
+COPY --from=updater-builder /tmp/meyuro-update-root/ /
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \

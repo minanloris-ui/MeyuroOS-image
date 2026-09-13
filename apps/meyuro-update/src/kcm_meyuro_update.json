@@ -1,0 +1,21 @@
+{
+    "KPlugin": {
+        "Description": "Manage atomic operating-system updates",
+        "Description[ru]": "Управление атомарными обновлениями операционной системы",
+        "Description[uk]": "Керування атомарними оновленнями операційної системи",
+        "FormFactors": [
+            "desktop"
+        ],
+        "Icon": "system-software-update",
+        "License": "GPL-3.0-or-later",
+        "Name": "MeyuroOS Updates",
+        "Name[ru]": "Обновления MeyuroOS",
+        "Name[uk]": "Оновлення MeyuroOS",
+        "Version": "0.1.0",
+        "Website": "https://github.com/minanloris-ui/MeyuroOS-image"
+    },
+    "X-KDE-Keywords": "MeyuroOS,Update,Upgrade,Rollback,bootc",
+    "X-KDE-Keywords[ru]": "MeyuroOS,Обновление,Откат,Версия,bootc",
+    "X-KDE-Keywords[uk]": "MeyuroOS,Оновлення,Відкат,Версія,bootc",
+    "X-KDE-System-Settings-Parent-Category": "system-administration"
+}
