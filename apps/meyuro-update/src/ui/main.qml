@@ -25,7 +25,7 @@ KCMUtils.SimpleKCM {
                 spacing: Kirigami.Units.largeSpacing
 
                 Kirigami.Icon {
-                    source: "system-software-update"
+                    source: "meyuro-logo"
                     implicitWidth: Kirigami.Units.iconSizes.huge
                     implicitHeight: implicitWidth
                 }

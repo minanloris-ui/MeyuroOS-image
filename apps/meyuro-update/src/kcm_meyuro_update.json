@@ -6,7 +6,7 @@
         "FormFactors": [
             "desktop"
         ],
-        "Icon": "system-software-update",
+        "Icon": "meyuro-logo",
         "License": "GPL-3.0-or-later",
         "Name": "MeyuroOS Updates",
         "Name[ru]": "Обновления MeyuroOS",

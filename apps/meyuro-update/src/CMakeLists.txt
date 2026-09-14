@@ -16,3 +16,8 @@ target_link_libraries(kcm_meyuro_update PRIVATE
     KF6::KCMUtils
     KF6::KCMUtilsQuick
 )
+
+install(
+    FILES icons/meyuro-logo.png
+    DESTINATION ${KDE_INSTALL_FULL_ICONDIR}/hicolor/scalable/apps
+)
