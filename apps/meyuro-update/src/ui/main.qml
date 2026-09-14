@@ -54,7 +54,9 @@ KCMUtils.SimpleKCM {
             Layout.fillWidth: true
             visible: text.length > 0
             text: kcm.summary
-            type: kcm.rebootRecommended ? Kirigami.MessageType.Positive : Kirigami.MessageType.Information
+            type: kcm.hasError
+                ? Kirigami.MessageType.Error
+                : (kcm.rebootRecommended ? Kirigami.MessageType.Positive : Kirigami.MessageType.Information)
         }
 
         Controls.GroupBox {
@@ -93,7 +95,7 @@ KCMUtils.SimpleKCM {
                 }
                 Controls.Label {
                     Layout.fillWidth: true
-                    text: kcm.stagedVersion || i18n("None")
+                    text: kcm.rebootRecommended ? (kcm.stagedVersion || i18n("Unknown")) : i18n("None")
                 }
             }
         }
@@ -151,6 +153,14 @@ KCMUtils.SimpleKCM {
                 Layout.fillWidth: true
                 text: kcm.activity
             }
+        }
+
+        Controls.Label {
+            Kirigami.FormData.isSection: true
+            Layout.fillWidth: true
+            text: i18n("Administrator authentication may be requested. This protects system updates and cannot be safely disabled.")
+            wrapMode: Text.WordWrap
+            opacity: 0.7
         }
 
         Controls.GroupBox {

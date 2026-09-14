@@ -9,9 +9,11 @@ provided by `bootc`:
 - queue a rollback to the previous deployment;
 - restart when the user explicitly confirms it.
 
-Privileged update and rollback operations are launched through `pkexec`, so the
-desktop's PolicyKit authentication dialog remains the security boundary. The
-module never accepts a command or image reference from QML or from user input.
+System status, update, rollback, and restart operations are launched through
+`pkexec`, so the desktop's PolicyKit authentication dialog remains the security
+boundary. An administrator password may therefore be requested during normal
+use. The module never accepts a command or image reference from QML or from user
+input.
 
 The `Containerfile` builds this module in a separate stage and copies only the
 installed runtime files into MeyuroOS. After installing the resulting image, the

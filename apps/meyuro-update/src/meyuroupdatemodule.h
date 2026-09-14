@@ -19,6 +19,7 @@ class MeyuroUpdateModule final : public KQuickConfigModule
     Q_PROPERTY(QString bootedVersion READ bootedVersion NOTIFY statusChanged)
     Q_PROPERTY(QString stagedVersion READ stagedVersion NOTIFY statusChanged)
     Q_PROPERTY(bool rebootRecommended READ rebootRecommended NOTIFY rebootRecommendedChanged)
+    Q_PROPERTY(bool hasError READ hasError NOTIFY hasErrorChanged)
 
 public:
     explicit MeyuroUpdateModule(QObject *parent, const KPluginMetaData &metaData);
@@ -31,6 +32,7 @@ public:
     [[nodiscard]] QString bootedVersion() const;
     [[nodiscard]] QString stagedVersion() const;
     [[nodiscard]] bool rebootRecommended() const;
+    [[nodiscard]] bool hasError() const;
 
     Q_INVOKABLE void refresh();
     Q_INVOKABLE void checkForUpdates();
@@ -45,6 +47,7 @@ Q_SIGNALS:
     void detailsChanged();
     void statusChanged();
     void rebootRecommendedChanged();
+    void hasErrorChanged();
 
 private:
     enum class Operation {
@@ -53,8 +56,10 @@ private:
         Check,
         Upgrade,
         Rollback,
+        Reboot,
     };
 
+    void refreshStatus(Operation context);
     void start(Operation operation, const QString &program, const QStringList &arguments);
     void handleFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void parseStatus(const QByteArray &json);
@@ -64,11 +69,14 @@ private:
     void setSummary(const QString &summary);
     void setDetails(const QString &details);
     void setRebootRecommended(bool rebootRecommended);
+    void setHasError(bool hasError);
 
     QProcess m_process;
     Operation m_operation = Operation::None;
+    Operation m_statusContext = Operation::None;
     bool m_busy = false;
     bool m_rebootRecommended = false;
+    bool m_hasError = false;
     QString m_activity;
     QString m_summary;
     QString m_details;

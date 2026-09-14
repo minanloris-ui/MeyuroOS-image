@@ -22,8 +22,14 @@ python3 -m json.tool apps/meyuro-update/src/kcm_meyuro_update.json >/dev/null
 
 grep -Fq '/usr/bin/bootc' apps/meyuro-update/src/meyuroupdatemodule.cpp
 grep -Fq '/usr/bin/pkexec' apps/meyuro-update/src/meyuroupdatemodule.cpp
+grep -Fq '{QString::fromLatin1(BootcPath), QStringLiteral("status"), QStringLiteral("--format=json")}' apps/meyuro-update/src/meyuroupdatemodule.cpp
+grep -Fq 'QProcess::SeparateChannels' apps/meyuro-update/src/meyuroupdatemodule.cpp
+grep -Fq 'return image.toObject().value(QStringLiteral("image")).toString();' apps/meyuro-update/src/meyuroupdatemodule.cpp
 grep -Fq 'QStringLiteral("upgrade")' apps/meyuro-update/src/meyuroupdatemodule.cpp
 grep -Fq 'QStringLiteral("rollback")' apps/meyuro-update/src/meyuroupdatemodule.cpp
+grep -Fq '{QString::fromLatin1(SystemctlPath), QStringLiteral("reboot")}' apps/meyuro-update/src/meyuroupdatemodule.cpp
+grep -Fq 'rollbackQueued' apps/meyuro-update/src/meyuroupdatemodule.cpp
+grep -Fq 'Kirigami.MessageType.Error' apps/meyuro-update/src/ui/main.qml
 grep -Fq '"Icon": "meyuro-logo"' apps/meyuro-update/src/kcm_meyuro_update.json
 grep -Fq 'source: "meyuro-logo"' apps/meyuro-update/src/ui/main.qml
 grep -Fq 'icons/meyuro-logo.png' apps/meyuro-update/src/CMakeLists.txt
