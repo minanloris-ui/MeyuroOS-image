@@ -12,6 +12,8 @@ required_files=(
   "apps/meyuro-update/src/meyuroupdatemodule.cpp"
   "apps/meyuro-update/src/ui/main.qml"
   "disk_config/iso.toml"
+  "system_files/usr/share/plymouth/themes/spinner/watermark.png"
+  "system_files/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/meyuro-launcher-logo-v1.js"
 )
 
 for file in "${required_files[@]}"; do
@@ -33,6 +35,10 @@ grep -Fq 'Kirigami.MessageType.Error' apps/meyuro-update/src/ui/main.qml
 grep -Fq '"Icon": "meyuro-logo"' apps/meyuro-update/src/kcm_meyuro_update.json
 grep -Fq 'source: "meyuro-logo"' apps/meyuro-update/src/ui/main.qml
 grep -Fq 'icons/meyuro-logo.png' apps/meyuro-update/src/CMakeLists.txt
+grep -Fq '"org.kde.plasma.kickoff"' system_files/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/meyuro-launcher-logo-v1.js
+grep -Fq 'widget.writeConfig("icon", "meyuro-logo")' system_files/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/meyuro-launcher-logo-v1.js
+grep -Fq '/usr/bin/dracut --no-hostonly' build_files/build.sh
+grep -Fq 'initramfs.img' build_files/build.sh
 grep -Fq 'COPY apps/meyuro-update' Containerfile
 grep -Fq 'COPY --from=updater-builder' Containerfile
 grep -Fq 'ghcr.io/minanloris-ui/meyuroos:latest' disk_config/iso.toml
