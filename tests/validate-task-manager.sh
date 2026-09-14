@@ -34,7 +34,12 @@ grep -Fq 'Open Task Manager' "${plugin_root}/src/taskbarcontextmenu.cpp"
 grep -Fq 'Открыть диспетчер задач' "${plugin_root}/src/taskbarcontextmenu.cpp"
 grep -Fq 'Відкрити диспетчер завдань' "${plugin_root}/src/taskbarcontextmenu.cpp"
 grep -Fq 'overview.page' "${plugin_root}/src/taskbarcontextmenu.cpp"
-grep -Fq 'panel->actions()' "${plugin_root}/src/taskbarcontextmenu.cpp"
+grep -Fq 'panel->internalAction' "${plugin_root}/src/taskbarcontextmenu.cpp"
+grep -Fq 'panel->contextualActions()' "${plugin_root}/src/taskbarcontextmenu.cpp"
+if grep -Fq 'panel->actions()' "${plugin_root}/src/taskbarcontextmenu.cpp"; then
+  echo "Deprecated Plasma::Containment::actions() call found" >&2
+  exit 1
+fi
 
 for page in overview applications history processes; do
   grep -Fq "${page}.page" "${launcher}"

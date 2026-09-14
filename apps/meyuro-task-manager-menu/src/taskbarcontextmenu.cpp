@@ -57,19 +57,19 @@ QList<QAction *> TaskbarContextMenu::contextualActions()
     }
 
     // Preserve Plasma's standard panel actions after the MeyuroOS entry.
-    const auto panelActions = panel->actions();
-    const QStringList standardActions{
-        QStringLiteral("add widgets"),
-        QStringLiteral("_context"),
-        QStringLiteral("configure"),
-        QStringLiteral("remove"),
-    };
-
-    for (const QString &name : standardActions) {
-        QAction *action = panelActions.value(name);
+    const auto appendAction = [&result](QAction *action) {
         if (action && !action->text().isEmpty()) {
             result.append(action);
         }
+    };
+
+    appendAction(panel->internalAction(QStringLiteral("add widgets")));
+    result << panel->contextualActions();
+    appendAction(panel->internalAction(QStringLiteral("configure")));
+
+    // Plasma only exposes panel removal while Edit Mode is active.
+    if (panel->isUserConfiguring()) {
+        appendAction(panel->internalAction(QStringLiteral("remove")));
     }
 
     return result;
