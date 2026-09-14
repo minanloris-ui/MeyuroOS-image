@@ -15,9 +15,9 @@ Shadow=false
 DecorationPosition=0
 
 [Layout]
-BorderBottom=1
-BorderLeft=1
-BorderRight=1
+BorderBottom=10
+BorderLeft=7
+BorderRight=7
 ButtonHeight=34
 ButtonMarginTop=5
 ButtonSpacing=5

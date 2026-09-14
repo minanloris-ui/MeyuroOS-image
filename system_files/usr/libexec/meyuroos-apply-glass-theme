@@ -2,7 +2,7 @@
 
 set -u
 
-THEME_VERSION="1"
+THEME_VERSION="2"
 STATE_ROOT="${XDG_STATE_HOME:-${HOME}/.local/state}/meyuroos"
 CONFIG_ROOT="${XDG_CONFIG_HOME:-${HOME}/.config}"
 MARKER="${STATE_ROOT}/glass-theme-version"
@@ -28,27 +28,77 @@ install -m 0644 /usr/share/meyuroos/theme-defaults/gtk.css \
 install -m 0644 /usr/share/meyuroos/theme-defaults/gtk.css \
     "${CONFIG_ROOT}/gtk-4.0/gtk.css"
 
-# Applying the global theme refreshes Plasma immediately. The direct KConfig
-# writes are intentional fallbacks and also make the chosen components clear
-# to older Plasma 6 releases.
-if command -v plasma-apply-lookandfeel >/dev/null 2>&1; then
-    plasma-apply-lookandfeel --apply com.meyuroos.glass >/dev/null 2>&1 || true
-fi
-
 if command -v kwriteconfig6 >/dev/null 2>&1; then
+    # Apply only application and window styling. Do not replace the Plasma
+    # desktop theme, panel, launcher, wallpaper, icons, or splash screen.
+    if command -v kreadconfig6 >/dev/null 2>&1; then
+        CURRENT_PLASMA_THEME="$(kreadconfig6 --file plasmarc --group Theme --key name 2>/dev/null || true)"
+        if [[ "${CURRENT_PLASMA_THEME}" == "MeyuroGlass" ]]; then
+            kwriteconfig6 --file plasmarc --group Theme --key name default
+        fi
+        CURRENT_COLOR_SCHEME="$(kreadconfig6 --file kdeglobals --group General --key ColorScheme 2>/dev/null || true)"
+        if [[ "${CURRENT_COLOR_SCHEME}" == "MeyuroGlass" ]]; then
+            kwriteconfig6 --file kdeglobals --group General --key ColorScheme BreezeDark
+        fi
+    fi
+
+    if command -v kvantummanager >/dev/null 2>&1; then
+        kvantummanager --set MeyuroGlass >/dev/null 2>&1 || true
+    fi
+
     kwriteconfig6 --file kdeglobals --group KDE --key widgetStyle kvantum
-    kwriteconfig6 --file kdeglobals --group General --key ColorScheme MeyuroGlass
-    kwriteconfig6 --file plasmarc --group Theme --key name MeyuroGlass
     kwriteconfig6 --file kwinrc --group Plugins --key blurEnabled true
-    kwriteconfig6 --file kwinrc --group Plugins --key backgroundcontrastEnabled true
     kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key library org.kde.kwin.aurorae
     kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme __aurorae__svg__MeyuroGlass
     kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key ButtonsOnLeft M
     kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key ButtonsOnRight IAX
+
+    # KWin rule type mask 289 = normal windows + dialogs + utility windows.
+    # It deliberately excludes Dock, Desktop, Menu, and other Plasma-shell
+    # surfaces, so the taskbar and application launcher are not made glassy.
+    WINDOW_RULE_ID="meyuro-glass-windows"
+    WINDOW_RULES=""
+    if command -v kreadconfig6 >/dev/null 2>&1; then
+        WINDOW_RULES="$(kreadconfig6 --file kwinrulesrc --group General --key rules 2>/dev/null || true)"
+    fi
+    case ",${WINDOW_RULES}," in
+        *,${WINDOW_RULE_ID},*) ;;
+        *) WINDOW_RULES="${WINDOW_RULES:+${WINDOW_RULES},}${WINDOW_RULE_ID}" ;;
+    esac
+    WINDOW_RULE_COUNT="$(printf '%s\n' "${WINDOW_RULES}" | awk -F, '{ print NF }')"
+    kwriteconfig6 --file kwinrulesrc --group General --key rules "${WINDOW_RULES}"
+    kwriteconfig6 --file kwinrulesrc --group General --key count "${WINDOW_RULE_COUNT}"
+    kwriteconfig6 --file kwinrulesrc --group "${WINDOW_RULE_ID}" --key Description "Meyuro Glass application windows"
+    kwriteconfig6 --file kwinrulesrc --group "${WINDOW_RULE_ID}" --key types 289
+    kwriteconfig6 --file kwinrulesrc --group "${WINDOW_RULE_ID}" --key opacityactive 94
+    kwriteconfig6 --file kwinrulesrc --group "${WINDOW_RULE_ID}" --key opacityactiverule 2
+    kwriteconfig6 --file kwinrulesrc --group "${WINDOW_RULE_ID}" --key opacityinactive 88
+    kwriteconfig6 --file kwinrulesrc --group "${WINDOW_RULE_ID}" --key opacityinactiverule 2
+
+    # Kvantum is instantiated once per process. Cycling the style and sending
+    # KDE's standard notifications makes already-running Qt applications load
+    # the new profile instead of keeping Breeze until the next login.
+    if command -v dbus-send >/dev/null 2>&1; then
+        kwriteconfig6 --file kdeglobals --group KDE --key widgetStyle Breeze
+        dbus-send --session --type=signal /KGlobalSettings \
+            org.kde.KGlobalSettings.notifyChange int32:2 int32:7 \
+            >/dev/null 2>&1 || true
+        kwriteconfig6 --file kdeglobals --group KDE --key widgetStyle kvantum
+        dbus-send --session --type=signal /KGlobalSettings \
+            org.kde.KGlobalSettings.notifyChange int32:2 int32:7 \
+            >/dev/null 2>&1 || true
+    fi
 fi
 
+KWIN_RELOADED=false
 if command -v qdbus6 >/dev/null 2>&1; then
-    qdbus6 org.kde.KWin /KWin reconfigure >/dev/null 2>&1 || true
+    if qdbus6 org.kde.KWin /KWin reconfigure >/dev/null 2>&1; then
+        KWIN_RELOADED=true
+    fi
 fi
 
-printf '%s\n' "${THEME_VERSION}" >"${MARKER}"
+# A failed early systemd-user attempt must not prevent the XDG-autostart
+# fallback from retrying after KWin is ready.
+if [[ "${KWIN_RELOADED}" == "true" ]]; then
+    printf '%s\n' "${THEME_VERSION}" >"${MARKER}"
+fi

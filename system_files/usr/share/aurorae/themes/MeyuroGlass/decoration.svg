@@ -44,16 +44,8 @@
   <rect id="decoration-inactive-bottom" x="80" y="40" width="20" height="20" fill="url(#inactiveGlass)"/>
   <path id="decoration-inactive-bottomright" d="M100 40h20v4a16 16 0 0 1-16 16h-4z" fill="url(#inactiveGlass)"/>
 
-  <!-- Blur mask for the complete rounded decoration. -->
-  <path id="mask-topleft" d="M140 0h-4a16 16 0 0 0-16 16v4h20z" fill="#fff"/>
-  <rect id="mask-top" x="140" y="0" width="20" height="20" fill="#fff"/>
-  <path id="mask-topright" d="M160 0h4a16 16 0 0 1 16 16v4h-20z" fill="#fff"/>
-  <rect id="mask-left" x="120" y="20" width="20" height="20" fill="#fff"/>
-  <rect id="mask-center" x="140" y="20" width="20" height="20" fill="#fff"/>
-  <rect id="mask-right" x="160" y="20" width="20" height="20" fill="#fff"/>
-  <path id="mask-bottomleft" d="M120 40h20v20h-4a16 16 0 0 1-16-16z" fill="#fff"/>
-  <rect id="mask-bottom" x="140" y="40" width="20" height="20" fill="#fff"/>
-  <path id="mask-bottomright" d="M160 40h20v4a16 16 0 0 1-16 16h-4z" fill="#fff"/>
+  <!-- Aurorae requires one element named "mask" for decoration blur. -->
+  <rect id="mask" x="120" y="0" width="60" height="60" rx="16" fill="#fff"/>
 
   <rect id="decoration-maximized-center" x="20" y="20" width="20" height="20" fill="#173873" fill-opacity=".93"/>
   <rect id="decoration-maximized-inactive-center" x="80" y="20" width="20" height="20" fill="#1d3158" fill-opacity=".9"/>

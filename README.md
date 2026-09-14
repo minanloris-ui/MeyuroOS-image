@@ -8,20 +8,22 @@ It uses `bootc` to check for, download, and prepare the newest signed image, and
 supports rebooting into it or returning to the previous deployment. See
 [`apps/meyuro-update`](apps/meyuro-update) for its source.
 
-## Meyuro Glass desktop style
+## Meyuro Glass window style
 
-MeyuroOS ships one system-wide Plasma 6 theme for application windows, shell
-surfaces, menus, and dialogs. It combines:
+MeyuroOS ships one system-wide Plasma 6 style for application windows, menus,
+and dialogs while leaving the Plasma panel, launcher, desktop, and wallpaper
+unchanged. It combines:
 
 - the `MeyuroGlass` KDE color scheme;
 - a translucent Kvantum style for native Qt 5 and Qt 6 applications;
 - a rounded Aurorae window frame with persistent glass title-bar controls;
-- the matching Plasma desktop style and global-theme package;
-- KWin blur/background-contrast defaults and matching GTK 3/4 glass styling.
+- a KWin rule limited to normal, dialog, and utility windows so Dock/panel
+  surfaces are excluded;
+- KWin blur support and matching GTK 3/4 glass styling.
 
-The theme is selected automatically once for both new and existing user
-profiles. Users can still choose a different global theme later; the login
-helper does not continuously overwrite personal appearance settings.
+The style is selected automatically once for both new and existing user
+profiles. A systemd-user unit plus an XDG-autostart fallback makes activation
+reliable without replacing the user's Plasma shell theme.
 
 Some sandboxed or client-side-decorated applications render their own chrome
 and cannot be made translucent by a host theme. They still receive the shared
@@ -167,7 +169,9 @@ The [Containerfile](./Containerfile) defines the operations used to customize th
 
 ## build.sh
 
-The [build.sh](./build_files/build.sh) file is called from your Containerfile. It is the best place to install new packages or make any other customization to your system. There are customization examples contained within it for your perusal.
+The [build.sh](./build_files/build.sh) file is called from your Containerfile and contains fast system-configuration steps. Package installation and the Plymouth initramfs rebuild live in earlier, independently cached Containerfile layers so routine theme or application changes do not repeat them. GitHub Actions also reuses trusted main-branch intermediate layers from GHCR; the first build warms the cache and later builds receive the speed-up.
+
+Routine pushes use the fast image path. The expensive rpm-ostree rechunk step is available from **Run workflow → Rechunk the image for smaller client update downloads** when preparing a release; enabling it trades build time for smaller client-side update downloads.
 
 ## build.yml
 

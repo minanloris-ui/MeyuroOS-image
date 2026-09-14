@@ -37,8 +37,8 @@ grep -Fq 'source: "meyuro-logo"' apps/meyuro-update/src/ui/main.qml
 grep -Fq 'icons/meyuro-logo.png' apps/meyuro-update/src/CMakeLists.txt
 grep -Fq '"org.kde.plasma.kickoff"' system_files/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/meyuro-launcher-logo-v1.js
 grep -Fq 'widget.writeConfig("icon", "meyuro-logo")' system_files/usr/share/plasma/shells/org.kde.plasma.desktop/contents/updates/meyuro-launcher-logo-v1.js
-grep -Fq '/usr/bin/dracut --no-hostonly' build_files/build.sh
-grep -Fq 'initramfs.img' build_files/build.sh
+grep -Fq '/usr/bin/dracut --no-hostonly' Containerfile
+grep -Fq 'initramfs.img' Containerfile
 grep -Fq 'COPY apps/meyuro-update' Containerfile
 grep -Fq 'COPY --from=updater-builder' Containerfile
 grep -Fq 'ghcr.io/minanloris-ui/meyuroos:latest' disk_config/iso.toml

@@ -1,0 +1,11 @@
+[Unit]
+Description=Apply Meyuro Glass application-window style
+PartOf=graphical-session.target
+After=graphical-session-pre.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/libexec/meyuroos-apply-glass-theme
+
+[Install]
+WantedBy=graphical-session.target

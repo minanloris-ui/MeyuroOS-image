@@ -2,24 +2,9 @@
 
 set -ouex pipefail
 
-# Copy the contents of system_files/ of the git repo to /
-cp -avf "/ctx/system_files"/. /
-
-### Install packages
-
-# Packages can be installed from any enabled yum repo on the image.
-# RPMfusion repos are available by default in ublue main images
-# List of rpmfusion packages can be found here:
-# https://mirrors.rpmfusion.org/mirrorlist?path=free/fedora/updates/43/x86_64/repoview/index.html&protocol=https&redirect=1
-
-# Install the Qt 5/6 Kvantum engines used by the Meyuro Glass application
-# style.  kvantum-data supplies the smooth translucent KvMojave SVG that the
-# Meyuro theme recolors through its own configuration.
-dnf5 install -y \
-    kvantum \
-    kvantum-qt5 \
-    plasma-systemmonitor \
-    tmux
+# Runtime packages and system_files are installed in separate Containerfile
+# layers. Keeping this script configuration-only prevents normal UI changes
+# from repeating package downloads or the initramfs rebuild.
 
 # Put the MeyuroOS task-manager action at the top of the panel's native
 # right-click menu for new Plasma profiles. Existing profiles are migrated by
@@ -38,15 +23,17 @@ cp -f /usr/share/Kvantum/KvMojave/KvMojave.svg \
     /usr/share/Kvantum/MeyuroGlass/MeyuroGlass.svg
 chmod 0644 /usr/share/Kvantum/MeyuroGlass/MeyuroGlass.svg
 
-# Plasma desktop styles do not allow symlinks in Plasma 6. Copy the canonical
-# color scheme so the application and shell palettes cannot drift apart.
+# Keep the color scheme beside the Kvantum profile as recommended by Kvantum,
+# so selecting the profile also resolves the intended application palette.
 install -Dm0644 /usr/share/color-schemes/MeyuroGlass.colors \
-    /usr/share/plasma/desktoptheme/MeyuroGlass/colors
+    /usr/share/Kvantum/MeyuroGlass/MeyuroGlass.colors
 
 # Seed new profiles before the first Plasma session. Existing profiles are
 # migrated once by the XDG autostart helper shipped in system_files/.
 install -Dm0644 /usr/share/meyuroos/theme-defaults/kvantum.kvconfig \
     /etc/skel/.config/Kvantum/kvantum.kvconfig
+install -Dm0644 /usr/share/meyuroos/theme-defaults/kvantum.kvconfig \
+    /etc/xdg/Kvantum/kvantum.kvconfig
 install -Dm0644 /usr/share/meyuroos/theme-defaults/gtk-settings.ini \
     /etc/skel/.config/gtk-3.0/settings.ini
 install -Dm0644 /usr/share/meyuroos/theme-defaults/gtk-settings.ini \
@@ -58,6 +45,16 @@ install -Dm0644 /usr/share/meyuroos/theme-defaults/gtk.css \
 chmod 0755 /usr/libexec/meyuroos-apply-glass-theme
 chmod 0755 /usr/libexec/meyuroos-apply-task-manager-integration
 
+# Provide window-only defaults even if a desktop session does not process XDG
+# autostart entries. These keys do not alter the Plasma panel or wallpaper.
+kwriteconfig6 --file /etc/xdg/kdeglobals --group KDE --key widgetStyle kvantum
+kwriteconfig6 --file /etc/xdg/kwinrc --group Plugins --key blurEnabled true
+kwriteconfig6 --file /etc/xdg/kwinrc --group org.kde.kdecoration2 --key library org.kde.kwin.aurorae
+kwriteconfig6 --file /etc/xdg/kwinrc --group org.kde.kdecoration2 --key theme __aurorae__svg__MeyuroGlass
+kwriteconfig6 --file /etc/xdg/kwinrc --group org.kde.kdecoration2 --key ButtonsOnLeft M
+kwriteconfig6 --file /etc/xdg/kwinrc --group org.kde.kdecoration2 --key ButtonsOnRight IAX
+systemctl --global enable meyuroos-glass-theme.service
+
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
@@ -68,15 +65,3 @@ chmod 0755 /usr/libexec/meyuroos-apply-task-manager-integration
 #### Example for enabling a System Unit File
 
 systemctl enable podman.socket
-
-# The Plymouth watermark is embedded in the boot initramfs. Rebuild it after
-# copying system_files so the Meyuro OS branding is visible during startup.
-if [[ "${KERNEL_FLAVOR:-}" == "surface" ]]; then
-    KERNEL_SUFFIX="surface"
-else
-    KERNEL_SUFFIX=""
-fi
-
-QUALIFIED_KERNEL="$(dnf5 repoquery --installed --queryformat='%{evr}.%{arch}' "kernel${KERNEL_SUFFIX:+-${KERNEL_SUFFIX}}")"
-/usr/bin/dracut --no-hostonly --kver "$QUALIFIED_KERNEL" --reproducible --zstd -v --add ostree --add fido2 -f "/usr/lib/modules/$QUALIFIED_KERNEL/initramfs.img"
-chmod 0600 "/usr/lib/modules/$QUALIFIED_KERNEL/initramfs.img"

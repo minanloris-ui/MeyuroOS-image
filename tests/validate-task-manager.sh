@@ -49,7 +49,7 @@ grep -Fq 'X-KDE-Shortcuts=Ctrl+Shift+Esc' "${launcher}"
 grep -Fq 'RightButton;NoModifier' "${shell_update}"
 grep -Fq 'org.meyuroos.contextmenu' "${shell_update}"
 grep -Fq 'org.kde.PlasmaShell.evaluateScript' "${integration}"
-grep -Fq 'plasma-systemmonitor' build_files/build.sh
+grep -Fq 'plasma-systemmonitor' Containerfile
 grep -Fq 'RightButton;NoModifier=org.meyuroos.contextmenu' build_files/build.sh
 grep -Fq 'chmod 0755 /usr/libexec/meyuroos-apply-task-manager-integration' build_files/build.sh
 for package in \

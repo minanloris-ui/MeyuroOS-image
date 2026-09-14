@@ -100,6 +100,15 @@ build $target_image=image_name $tag=default_tag:
 
     BUILD_ARGS=()
     LABELS=()
+    # GitHub Actions sets these variables for a registry-backed Buildah cache.
+    # Local builds still benefit from Podman's ordinary layer cache.
+    BUILD_ARGS+=("--layers")
+    if [[ -n "${BUILD_CACHE_FROM:-}" ]]; then
+        BUILD_ARGS+=("--cache-from" "${BUILD_CACHE_FROM}")
+    fi
+    if [[ -n "${BUILD_CACHE_TO:-}" ]]; then
+        BUILD_ARGS+=("--cache-to" "${BUILD_CACHE_TO}")
+    fi
     if [[ -z "$(git status -s)" ]]; then
         GIT_SHA=$(git rev-parse --short HEAD)
         LABELS+=("--label" "io.artifacthub.package.readme-url=https://raw.githubusercontent.com/{{ repo_organization }}/{{ image_name }}/${GIT_SHA}/README.md")

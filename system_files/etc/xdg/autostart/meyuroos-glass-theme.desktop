@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=MeyuroOS appearance setup
-Comment=Apply the Meyuro Glass desktop style once
+Comment=Apply the Meyuro Glass application-window style once
 Exec=/usr/libexec/meyuroos-apply-glass-theme
 OnlyShowIn=KDE;
 NoDisplay=true
