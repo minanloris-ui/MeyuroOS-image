@@ -15,8 +15,12 @@ RUN dnf5 install -y \
         extra-cmake-modules \
         gcc-c++ \
         kf6-kcmutils-devel \
+        kf6-kconfig-devel \
         kf6-kcoreaddons-devel \
         kf6-ki18n-devel \
+        kf6-kirigami-devel \
+        kf6-kpackage-devel \
+        kf6-kwindowsystem-devel \
         libplasma-devel \
         ninja-build \
         qt6-qtbase-devel \

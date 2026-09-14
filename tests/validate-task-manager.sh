@@ -47,7 +47,16 @@ grep -Fq 'org.kde.PlasmaShell.evaluateScript' "${integration}"
 grep -Fq 'plasma-systemmonitor' build_files/build.sh
 grep -Fq 'RightButton;NoModifier=org.meyuroos.contextmenu' build_files/build.sh
 grep -Fq 'chmod 0755 /usr/libexec/meyuroos-apply-task-manager-integration' build_files/build.sh
-grep -Fq 'libplasma-devel' Containerfile
+for package in \
+  kf6-kconfig-devel \
+  kf6-kirigami-devel \
+  kf6-kpackage-devel \
+  kf6-kwindowsystem-devel \
+  libplasma-devel; do
+  grep -Fq "${package}" Containerfile
+done
+grep -Fq 'COMPONENTS Core Gui Qml Widgets' "${plugin_root}/CMakeLists.txt"
+grep -Fq 'KirigamiPlatform' "${plugin_root}/CMakeLists.txt"
 grep -Fq 'org.meyuroos.contextmenu.so' Containerfile
 
 echo "MeyuroOS task-manager source validation passed."

@@ -18,8 +18,18 @@ include(KDECMakeSettings)
 
 add_definitions(-DTRANSLATION_DOMAIN="meyuro_task_manager_menu")
 
-find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Core Widgets)
-find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS CoreAddons I18n)
+# PlasmaConfig currently imports PlasmaTargets before resolving all of the
+# public targets referenced by Plasma::Plasma. Load those targets explicitly
+# first so this also configures correctly with CMake 4 on Fedora/Bazzite.
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS Core Gui Qml Widgets)
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
+    Config
+    CoreAddons
+    I18n
+    KirigamiPlatform
+    Package
+    WindowSystem
+)
 find_package(Plasma 6.0 REQUIRED)
 
 kcoreaddons_add_plugin(meyuro_task_manager_contextmenu
