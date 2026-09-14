@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=MeyuroOS appearance setup
+Comment=Apply the Meyuro Glass desktop style once
+Exec=/usr/libexec/meyuroos-apply-glass-theme
+OnlyShowIn=KDE;
+NoDisplay=true
+Terminal=false
+X-KDE-autostart-phase=1
+X-KDE-StartupNotify=false

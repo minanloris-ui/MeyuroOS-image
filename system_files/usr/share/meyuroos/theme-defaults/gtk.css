@@ -1,0 +1,133 @@
+/* Meyuro Glass: shared GTK 3/4 surface styling. */
+@define-color theme_bg_color #122d5e;
+@define-color theme_fg_color #f2f7ff;
+@define-color theme_base_color #123067;
+@define-color theme_text_color #f2f7ff;
+@define-color theme_selected_bg_color #0a78c8;
+@define-color theme_selected_fg_color #ffffff;
+@define-color insensitive_fg_color #7891ba;
+@define-color borders rgba(190, 222, 255, 0.30);
+
+window,
+window.background,
+.background {
+  color: @theme_fg_color;
+  background-color: rgba(14, 38, 83, 0.90);
+  background-image: linear-gradient(135deg,
+                                    rgba(28, 88, 180, 0.74),
+                                    rgba(18, 45, 94, 0.84) 58%,
+                                    rgba(111, 63, 147, 0.66));
+}
+
+decoration {
+  border: 1px solid rgba(217, 235, 255, 0.64);
+  border-radius: 16px;
+  box-shadow: 0 18px 48px rgba(3, 12, 34, 0.52);
+}
+
+window.maximized decoration,
+window.fullscreen decoration {
+  border-radius: 0;
+}
+
+headerbar,
+.titlebar,
+toolbar,
+menubar {
+  color: #f7faff;
+  background-color: rgba(31, 77, 157, 0.50);
+  background-image: linear-gradient(to right,
+                                    rgba(33, 100, 203, 0.58),
+                                    rgba(112, 69, 157, 0.38));
+  border-color: rgba(190, 222, 255, 0.20);
+  box-shadow: none;
+}
+
+headerbar {
+  min-height: 38px;
+  padding: 4px 8px;
+  border-radius: 15px 15px 0 0;
+}
+
+window.maximized headerbar,
+window.fullscreen headerbar {
+  border-radius: 0;
+}
+
+button,
+entry,
+spinbutton,
+combobox button {
+  color: #f4f8ff;
+  background-color: rgba(61, 105, 174, 0.48);
+  background-image: linear-gradient(to bottom,
+                                    rgba(116, 169, 242, 0.16),
+                                    rgba(45, 76, 133, 0.18));
+  border: 1px solid rgba(188, 220, 255, 0.25);
+  border-radius: 10px;
+  box-shadow: none;
+}
+
+button:hover,
+row:hover {
+  background-color: rgba(47, 151, 239, 0.46);
+  border-color: rgba(125, 217, 255, 0.72);
+}
+
+button:active,
+button:checked,
+row:selected,
+*:selected {
+  color: @theme_selected_fg_color;
+  background-color: rgba(10, 120, 200, 0.92);
+}
+
+entry:focus,
+button:focus,
+treeview:focus {
+  border-color: rgba(93, 210, 255, 0.92);
+  box-shadow: 0 0 0 1px rgba(93, 210, 255, 0.28);
+}
+
+popover > contents,
+menu,
+.menu,
+tooltip,
+.tooltip {
+  color: #f7faff;
+  background-color: rgba(18, 46, 94, 0.94);
+  border: 1px solid rgba(190, 222, 255, 0.30);
+  border-radius: 12px;
+  box-shadow: 0 12px 34px rgba(3, 12, 34, 0.48);
+}
+
+sidebar,
+.sidebar,
+navigation-sidebar,
+.navigation-sidebar,
+scrolledwindow,
+treeview.view,
+textview.view,
+iconview.view,
+listview,
+gridview {
+  color: @theme_fg_color;
+  background-color: rgba(12, 37, 80, 0.36);
+}
+
+separator {
+  background-color: rgba(190, 222, 255, 0.18);
+  min-width: 1px;
+  min-height: 1px;
+}
+
+scrollbar slider {
+  min-width: 8px;
+  min-height: 32px;
+  background-color: rgba(128, 174, 236, 0.50);
+  border-radius: 999px;
+}
+
+scrollbar slider:hover {
+  background-color: rgba(93, 210, 255, 0.74);
+}

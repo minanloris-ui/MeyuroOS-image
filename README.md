@@ -8,6 +8,35 @@ It uses `bootc` to check for, download, and prepare the newest signed image, and
 supports rebooting into it or returning to the previous deployment. See
 [`apps/meyuro-update`](apps/meyuro-update) for its source.
 
+## Meyuro Glass desktop style
+
+MeyuroOS ships one system-wide Plasma 6 theme for application windows, shell
+surfaces, menus, and dialogs. It combines:
+
+- the `MeyuroGlass` KDE color scheme;
+- a translucent Kvantum style for native Qt 5 and Qt 6 applications;
+- a rounded Aurorae window frame with persistent glass title-bar controls;
+- the matching Plasma desktop style and global-theme package;
+- KWin blur/background-contrast defaults and matching GTK 3/4 glass styling.
+
+The theme is selected automatically once for both new and existing user
+profiles. Users can still choose a different global theme later; the login
+helper does not continuously overwrite personal appearance settings.
+
+Some sandboxed or client-side-decorated applications render their own chrome
+and cannot be made translucent by a host theme. They still receive the shared
+color scheme where their toolkit supports desktop theme integration.
+
+## MeyuroOS Task Manager
+
+MeyuroOS includes a Windows 11-style task-manager entry in the Plasma panel's
+right-click menu. It opens the native Plasma System Monitor on its overview
+page, where users can see running applications and background services, end
+processes, and inspect live CPU, memory, GPU, disk, and network usage. The
+Applications, Performance, and Processes pages are also exposed as launcher
+actions. Because the monitor is a native KDE application, it automatically uses
+the Meyuro Glass color scheme, window frame, controls, and graphs.
+
 ## Upstream image-template guide
 
 This repository is meant to be a template for building your own custom [bootc](https://github.com/bootc-dev/bootc) image. This template is the recommended way to make customizations to any image published by the Universal Blue Project.

@@ -1,0 +1,54 @@
+#!/usr/bin/bash
+
+set -u
+
+THEME_VERSION="1"
+STATE_ROOT="${XDG_STATE_HOME:-${HOME}/.local/state}/meyuroos"
+CONFIG_ROOT="${XDG_CONFIG_HOME:-${HOME}/.config}"
+MARKER="${STATE_ROOT}/glass-theme-version"
+
+if [[ -r "${MARKER}" ]] && [[ "$(<"${MARKER}")" == "${THEME_VERSION}" ]]; then
+    exit 0
+fi
+
+mkdir -p \
+    "${STATE_ROOT}" \
+    "${CONFIG_ROOT}/Kvantum" \
+    "${CONFIG_ROOT}/gtk-3.0" \
+    "${CONFIG_ROOT}/gtk-4.0"
+
+install -m 0644 /usr/share/meyuroos/theme-defaults/kvantum.kvconfig \
+    "${CONFIG_ROOT}/Kvantum/kvantum.kvconfig"
+install -m 0644 /usr/share/meyuroos/theme-defaults/gtk-settings.ini \
+    "${CONFIG_ROOT}/gtk-3.0/settings.ini"
+install -m 0644 /usr/share/meyuroos/theme-defaults/gtk-settings.ini \
+    "${CONFIG_ROOT}/gtk-4.0/settings.ini"
+install -m 0644 /usr/share/meyuroos/theme-defaults/gtk.css \
+    "${CONFIG_ROOT}/gtk-3.0/gtk.css"
+install -m 0644 /usr/share/meyuroos/theme-defaults/gtk.css \
+    "${CONFIG_ROOT}/gtk-4.0/gtk.css"
+
+# Applying the global theme refreshes Plasma immediately. The direct KConfig
+# writes are intentional fallbacks and also make the chosen components clear
+# to older Plasma 6 releases.
+if command -v plasma-apply-lookandfeel >/dev/null 2>&1; then
+    plasma-apply-lookandfeel --apply com.meyuroos.glass >/dev/null 2>&1 || true
+fi
+
+if command -v kwriteconfig6 >/dev/null 2>&1; then
+    kwriteconfig6 --file kdeglobals --group KDE --key widgetStyle kvantum
+    kwriteconfig6 --file kdeglobals --group General --key ColorScheme MeyuroGlass
+    kwriteconfig6 --file plasmarc --group Theme --key name MeyuroGlass
+    kwriteconfig6 --file kwinrc --group Plugins --key blurEnabled true
+    kwriteconfig6 --file kwinrc --group Plugins --key backgroundcontrastEnabled true
+    kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key library org.kde.kwin.aurorae
+    kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key theme __aurorae__svg__MeyuroGlass
+    kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key ButtonsOnLeft M
+    kwriteconfig6 --file kwinrc --group org.kde.kdecoration2 --key ButtonsOnRight IAX
+fi
+
+if command -v qdbus6 >/dev/null 2>&1; then
+    qdbus6 org.kde.KWin /KWin reconfigure >/dev/null 2>&1 || true
+fi
+
+printf '%s\n' "${THEME_VERSION}" >"${MARKER}"

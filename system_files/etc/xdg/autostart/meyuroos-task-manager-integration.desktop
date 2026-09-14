@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=MeyuroOS task-manager panel integration
+Comment=Add Task Manager to the Plasma panel context menu once
+Exec=/usr/libexec/meyuroos-apply-task-manager-integration
+OnlyShowIn=KDE;
+NoDisplay=true
+Terminal=false
+X-KDE-autostart-phase=1
+X-KDE-StartupNotify=false

@@ -1,0 +1,16 @@
+{
+  "KPlugin": {
+    "Authors": [
+      {
+        "Name": "MeyuroOS"
+      }
+    ],
+    "Description": "Plasma panel menu with quick access to the MeyuroOS Task Manager",
+    "Icon": "utilities-system-monitor",
+    "Id": "org.meyuroos.contextmenu",
+    "License": "GPL-3.0-or-later",
+    "Name": "MeyuroOS Panel Menu",
+    "Version": "1.0"
+  },
+  "X-Plasma-HasConfigurationInterface": false
+}

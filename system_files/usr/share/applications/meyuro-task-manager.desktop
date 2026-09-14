@@ -1,0 +1,40 @@
+[Desktop Entry]
+Type=Application
+Name=MeyuroOS Task Manager
+Name[ru]=Диспетчер задач MeyuroOS
+Name[uk]=Диспетчер завдань MeyuroOS
+GenericName=Task Manager
+GenericName[ru]=Диспетчер задач
+GenericName[uk]=Диспетчер завдань
+Comment=View applications, background processes, and system performance
+Comment[ru]=Приложения, фоновые процессы и производительность системы
+Comment[uk]=Програми, фонові процеси та швидкодія системи
+Exec=plasma-systemmonitor --page-id overview.page
+Icon=utilities-system-monitor
+Terminal=false
+Categories=Qt;KDE;System;Monitor;
+Keywords=task;manager;process;cpu;memory;gpu;disk;network;задачи;процессы;цп;озу;гп;диск;
+StartupNotify=true
+X-KDE-Shortcuts=Ctrl+Shift+Esc
+Actions=applications;performance;processes;
+
+[Desktop Action applications]
+Name=Applications and background services
+Name[ru]=Приложения и фоновые процессы
+Name[uk]=Програми та фонові процеси
+Icon=applications-all-symbolic
+Exec=plasma-systemmonitor --page-id applications.page
+
+[Desktop Action performance]
+Name=Performance graphs
+Name[ru]=Графики производительности
+Name[uk]=Графіки швидкодії
+Icon=office-chart-line-symbolic
+Exec=plasma-systemmonitor --page-id history.page
+
+[Desktop Action processes]
+Name=All processes
+Name[ru]=Все процессы
+Name[uk]=Усі процеси
+Icon=view-process-system-symbolic
+Exec=plasma-systemmonitor --page-id processes.page

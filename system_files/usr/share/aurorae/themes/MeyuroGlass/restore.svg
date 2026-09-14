@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="136" height="34" viewBox="0 0 136 34">
+  <g id="active-center"><rect width="34" height="34" rx="10" fill="#b8d3ff" fill-opacity=".14" stroke="#d9ebff" stroke-opacity=".14"/><path d="M13.5 13.5v-2h9v9h-2m-9-7h9v9h-9z" fill="none" stroke="#f5f9ff" stroke-width="1.8" stroke-linejoin="round"/></g>
+  <g id="inactive-center" transform="translate(34)"><rect width="34" height="34" rx="10" fill="#9eb8e7" fill-opacity=".08"/><path d="M13.5 13.5v-2h9v9h-2m-9-7h9v9h-9z" fill="none" stroke="#bfd0ec" stroke-width="1.8" stroke-linejoin="round"/></g>
+  <g id="hover-center" transform="translate(68)"><rect width="34" height="34" rx="10" fill="#c8dcff" fill-opacity=".27" stroke="#eaf4ff" stroke-opacity=".2"/><path d="M13.5 13.5v-2h9v9h-2m-9-7h9v9h-9z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></g>
+  <g id="pressed-center" transform="translate(102)"><rect width="34" height="34" rx="10" fill="#159aff" fill-opacity=".56"/><path d="M13.5 13.5v-2h9v9h-2m-9-7h9v9h-9z" fill="none" stroke="#fff" stroke-width="1.8" stroke-linejoin="round"/></g>
+</svg>

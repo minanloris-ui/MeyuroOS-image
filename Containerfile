@@ -9,6 +9,7 @@ COPY system_files /system_files
 # packages do not become part of the final operating-system image.
 FROM ${BASE_IMAGE} AS updater-builder
 COPY apps/meyuro-update /tmp/meyuro-update
+COPY apps/meyuro-task-manager-menu /tmp/meyuro-task-manager-menu
 RUN dnf5 install -y \
         cmake \
         extra-cmake-modules \
@@ -16,6 +17,7 @@ RUN dnf5 install -y \
         kf6-kcmutils-devel \
         kf6-kcoreaddons-devel \
         kf6-ki18n-devel \
+        libplasma-devel \
         ninja-build \
         qt6-qtbase-devel \
         qt6-qtdeclarative-devel && \
@@ -24,8 +26,15 @@ RUN dnf5 install -y \
         -DCMAKE_BUILD_TYPE=Release \
         -DCMAKE_INSTALL_PREFIX=/usr && \
     cmake --build /tmp/meyuro-update-build && \
-    DESTDIR=/tmp/meyuro-update-root cmake --install /tmp/meyuro-update-build && \
-    find /tmp/meyuro-update-root -name 'kcm_meyuro_update.so' -print -quit | grep -q .
+    DESTDIR=/tmp/meyuro-app-root cmake --install /tmp/meyuro-update-build && \
+    cmake -S /tmp/meyuro-task-manager-menu -B /tmp/meyuro-task-manager-menu-build \
+        -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr && \
+    cmake --build /tmp/meyuro-task-manager-menu-build && \
+    DESTDIR=/tmp/meyuro-app-root cmake --install /tmp/meyuro-task-manager-menu-build && \
+    find /tmp/meyuro-app-root -name 'kcm_meyuro_update.so' -print -quit | grep -q . && \
+    find /tmp/meyuro-app-root -name 'org.meyuroos.contextmenu.so' -print -quit | grep -q .
 
 # Base Image
 FROM ${BASE_IMAGE}
@@ -54,7 +63,7 @@ FROM ${BASE_IMAGE}
 ## make modifications desired in your image and install packages by modifying the build.sh script
 ## the following RUN directive does all the things required to run "build.sh" as recommended.
 
-COPY --from=updater-builder /tmp/meyuro-update-root/ /
+COPY --from=updater-builder /tmp/meyuro-app-root/ /
 
 RUN --mount=type=bind,from=ctx,source=/,target=/ctx \
     --mount=type=cache,dst=/var/cache \

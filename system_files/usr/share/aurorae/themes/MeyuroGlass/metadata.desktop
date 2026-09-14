@@ -1,0 +1,9 @@
+[Desktop Entry]
+Name=Meyuro Glass
+Comment=Rounded translucent window frame for MeyuroOS
+X-KDE-PluginInfo-Name=MeyuroGlass
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Author=MeyuroOS
+X-KDE-PluginInfo-License=GPL-3.0-or-later
+Type=Application
+X-KDE-PluginInfo-EnabledByDefault=true
